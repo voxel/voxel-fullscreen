@@ -15,20 +15,24 @@ function FullscreenPlugin(game, opts) {
 
   this.element = opts.element !== undefined ? opts.element : document.body;
 
+  this.pendingRequest = false;
+
   this.enable();
 }
 
 FullscreenPlugin.prototype.enable = function() {
   this.shell.bind('fullscreen', 'F11');
   this.keys.down.on('fullscreen', this.onToggle = this.toggle.bind(this));
-  this.onChange = this.change.bind(this);
+  this.onChange = this.changed.bind(this);
   document.addEventListener('fullscreenchange', this.onChange);
   document.addEventListener('webkitfullscreenchange', this.onChange);
   document.addEventListener('mozfullscreenchange', this.onChange);
   document.addEventListener('MSFullscreenchange', this.onChange);
+  document.addEventListener('click', this.onClick = this.click.bind(this));
 };
 
 FullscreenPlugin.prototype.disable = function() {
+  document.removeEventListener('click', this.onClick);
   document.removeEventListener('MSFullscreenchange', this.onChange);
   document.removeEventListener('mozfullscreenchange', this.onChange);
   document.removeEventListener('webkitfullscreenchange', this.onChange);
@@ -46,19 +50,23 @@ FullscreenPlugin.prototype.isFullscreen = function() {
   //return document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen; // non-standard
 };
 
-// enter or exit fullscreen
-// note: these methods MUST be only called in response to user input, or it will do nothing (browser feature)
+// try to enter or exit fullscreen
+// note: if not called in response to user input, entering will be delayed until the next
+// time the user clicks their mouse, which counts as required user interaction (browser feature)
 FullscreenPlugin.prototype.toggle = function() {
   if (this.isFullscreen()) {
-    console.log('leave fullscreen');
+    console.log('fullscreen leaving');
     this.leave();
   } else {
-    console.log('enter fullscreen');
+    console.log('fullscreen entering');
     this.enter();
   }
 };
 
 FullscreenPlugin.prototype.enter = function() {
+  // request might be denied: cleared in change(), or replayed in click()
+  this.pendingRequest = true;
+
   var f = 
     this.element.requestFullscreen ||
     this.element.requestFullScreen ||
@@ -85,8 +93,22 @@ FullscreenPlugin.prototype.leave = function() {
   if (!f) throw new Error('no exitFullscreen found on documnet');
 
   f.call(document);
+
+  // leaving fullscreen for some reason releases pointer lock,
+  // but we can't re-request it here since it wasn't a mouse action :(
+  //this.shell.pointerLock = true;
 };
 
-FullscreenPlugin.prototype.change = function() {
-  console.log('change',this.isFullscreen());
+FullscreenPlugin.prototype.changed = function() {
+  console.log('fullscreen changed', this.isFullscreen());
+  if (this.isFullscreen() && this.pendingRequest) {
+    this.pendingRequest = false; // fullfilled!
+  }
+};
+
+FullscreenPlugin.prototype.click = function() {
+  if (this.pendingRequest) {
+    // this is our chance to try again
+    this.enter();
+  }
 };
