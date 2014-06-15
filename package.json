@@ -2,12 +2,15 @@
   "name": "voxel-fullscreen",
   "description": "",
   "version": "0.0.1",
+  "main": "fullscreen.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:deathcap/voxel-fullscreen.git"
   },
   "keywords": [
-    "voxel"
+    "voxel",
+    "plugin",
+    "fullscreen"
   ],
   "dependencies": {
   },
