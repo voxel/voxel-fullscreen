@@ -1,0 +1,6 @@
+# voxel-fullscreen
+
+## License
+
+MIT
+
