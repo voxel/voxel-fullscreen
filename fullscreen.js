@@ -51,7 +51,8 @@ FullscreenPlugin.prototype.enter = function() {
     this.element.webkitRequestFullscreen ||
     this.element.webkitRequestFullScreen ||
     this.element.mozRequestFullscreen ||
-    this.element.mozRequestFullScreen;
+    this.element.mozRequestFullScreen ||
+    this.element.msRequestFullscreen;
   if (!f) throw new Error('no requestFullscreen found on '+this.element);
 
   f.call(this.element, this.element.ALLOW_KEYBOARD_INPUT)
@@ -65,8 +66,9 @@ FullscreenPlugin.prototype.leave = function() {
     document.webkitCancelFullscreen ||
     document.webkitCancelFullScreen ||
     document.mozCancelFullscreen ||
-    document.mozCancelFullScreen;
-  if (!f) throw new Error('no cancelFullscreen found on documnet');
+    document.mozCancelFullScreen ||
+    document.msExitFullscreen;
+  if (!f) throw new Error('no exitFullscreen found on documnet');
 
   f.call(document);
 };
