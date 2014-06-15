@@ -29,7 +29,12 @@ FullscreenPlugin.prototype.disable = function() {
 };
 
 FullscreenPlugin.prototype.isFullscreen = function() {
-  return document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen;
+  return !!(
+    document.fullscreenElement ||
+    document.webkitFullscreenElement ||
+    document.mozFullScreenElement ||
+    document.msFullscreenElement);
+  //return document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen; // non-standard
 };
 
 // enter or exit fullscreen
