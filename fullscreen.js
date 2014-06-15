@@ -22,7 +22,8 @@ function FullscreenPlugin(game, opts) {
 
 FullscreenPlugin.prototype.enable = function() {
   this.shell.bind('fullscreen', 'F11');
-  this.keys.down.on('fullscreen', this.onToggle = this.toggle.bind(this));
+  //this.keys.down.on('fullscreen', this.onToggle = this.toggle.bind(this));
+  document.addEventListener('keydown', this.onKeydown = this.keydown.bind(this));
   this.onChange = this.changed.bind(this);
   document.addEventListener('fullscreenchange', this.onChange);
   document.addEventListener('webkitfullscreenchange', this.onChange);
@@ -32,12 +33,13 @@ FullscreenPlugin.prototype.enable = function() {
 };
 
 FullscreenPlugin.prototype.disable = function() {
+  document.removeEventListener('keydown', this.onKeydown);
   document.removeEventListener('click', this.onClick);
   document.removeEventListener('MSFullscreenchange', this.onChange);
   document.removeEventListener('mozfullscreenchange', this.onChange);
   document.removeEventListener('webkitfullscreenchange', this.onChange);
   document.removeEventListener('fullscreenchange', this.onChange);
-  this.keys.down.removeListener('fullscreen', this.onToggle);
+  //this.keys.down.removeListener('fullscreen', this.onToggle);
   this.shell.unbind('fullscreen');
 };
 
@@ -48,6 +50,18 @@ FullscreenPlugin.prototype.isFullscreen = function() {
     document.mozFullScreenElement ||
     document.msFullscreenElement);
   //return document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen; // non-standard
+};
+
+FullscreenPlugin.prototype.keydown = function(ev) {
+  var code = ev.keyCode;
+  var bindingNames = this.keys.getBindingsNames(code);
+  if (bindingNames.indexOf('fullscreen') == -1) return; // not us
+  // TODO: does this event need to be debounced? repeatedly sent when key is down,
+  // we could track keyup like voxel-keys to avoid repeat handling, but doesn't seem
+  // to be a problem right now (if user really wants to hold F11 to keep toggling...)
+
+  console.log('fullscreen keydown');
+  this.toggle();
 };
 
 // try to enter or exit fullscreen
