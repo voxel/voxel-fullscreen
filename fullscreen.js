@@ -21,9 +21,18 @@ function FullscreenPlugin(game, opts) {
 FullscreenPlugin.prototype.enable = function() {
   this.shell.bind('fullscreen', 'F11');
   this.keys.down.on('fullscreen', this.onToggle = this.toggle.bind(this));
+  this.onChange = this.change.bind(this);
+  document.addEventListener('fullscreenchange', this.onChange);
+  document.addEventListener('webkitfullscreenchange', this.onChange);
+  document.addEventListener('mozfullscreenchange', this.onChange);
+  document.addEventListener('MSFullscreenchange', this.onChange);
 };
 
 FullscreenPlugin.prototype.disable = function() {
+  document.removeEventListener('MSFullscreenchange', this.onChange);
+  document.removeEventListener('mozfullscreenchange', this.onChange);
+  document.removeEventListener('webkitfullscreenchange', this.onChange);
+  document.removeEventListener('fullscreenchange', this.onChange);
   this.keys.down.removeListener('fullscreen', this.onToggle);
   this.shell.unbind('fullscreen');
 };
@@ -76,4 +85,8 @@ FullscreenPlugin.prototype.leave = function() {
   if (!f) throw new Error('no exitFullscreen found on documnet');
 
   f.call(document);
+};
+
+FullscreenPlugin.prototype.change = function() {
+  console.log('change',this.isFullscreen());
 };
