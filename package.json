@@ -1,7 +1,7 @@
 {
   "name": "voxel-fullscreen",
   "description": "toggle fullscreen with a keyboard shortcut (voxel.js plugin)",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "fullscreen.js",
   "repository": {
     "type": "git",
@@ -12,7 +12,6 @@
     "plugin",
     "fullscreen"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "license": "MIT"
 }
