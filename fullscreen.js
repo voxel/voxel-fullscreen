@@ -21,6 +21,10 @@ function FullscreenPlugin(game, opts) {
 }
 
 FullscreenPlugin.prototype.enable = function() {
+  // ensure the full screen is covered on WebKit browsers
+  // https://github.com/deathcap/voxel-fullscreen/issues/1
+  document.body.style.width = '100%';
+
   this.shell.bind('fullscreen', 'F11');
   //this.keys.down.on('fullscreen', this.onToggle = this.toggle.bind(this));
   document.addEventListener('keydown', this.onKeydown = this.keydown.bind(this));
