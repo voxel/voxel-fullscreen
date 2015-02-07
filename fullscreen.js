@@ -95,7 +95,7 @@ FullscreenPlugin.prototype.enter = function() {
     this.element.msRequestFullscreen;
   if (!f) throw new Error('no requestFullscreen found on '+this.element);
 
-  f.call(this.element, this.element.ALLOW_KEYBOARD_INPUT)
+  f.call(this.element, Element.ALLOW_KEYBOARD_INPUT)
 };
 
 FullscreenPlugin.prototype.leave = function() {
