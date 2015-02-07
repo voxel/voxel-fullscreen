@@ -9,6 +9,12 @@ will enter or exit fullscreen mode via the
 
 Known issue: leaving fullscreen may release pointer lock (click to re-acquire).
 
+## Options
+
+`element`: the HTML element to fullscreen, defaults to `document.body`
+
+`requestFlags`: flags to pass to `requestFullscreen`, defaults to `Element.ALLOW_KEYBOARD_INPUT`
+
 
 ## How does this plugin compare to...
 

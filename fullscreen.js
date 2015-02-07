@@ -14,6 +14,7 @@ function FullscreenPlugin(game, opts) {
   if (!this.keys) throw new Error('voxel-fullscreen requires voxel-keys');
 
   this.element = opts.element !== undefined ? opts.element : document.body;
+  this.requestFlags = opts.requestFlag !== undefined ? opts.requestFlags : Element.ALLOW_KEYBOARD_INPUT;
 
   this.pendingRequest = false;
 
@@ -95,7 +96,7 @@ FullscreenPlugin.prototype.enter = function() {
     this.element.msRequestFullscreen;
   if (!f) throw new Error('no requestFullscreen found on '+this.element);
 
-  f.call(this.element, Element.ALLOW_KEYBOARD_INPUT)
+  f.call(this.element, this.requestFlags);
 };
 
 FullscreenPlugin.prototype.leave = function() {
